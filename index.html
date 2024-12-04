@@ -15,7 +15,184 @@
     <script src="https://unpkg.com/crisp-game-lib@1.2.0/docs/bundle.js"></script>
 
     <script>
-      // game code goes here
+      title = "";
+
+      description = `
+      `;
+
+      characters = [
+      // Player Sprite
+        `
+ pppp 
+ppyLby
+yyyyyy
+rrrrr 
+ryyrr 
+ llll 
+        `,
+        `
+  ll  
+ lYYl 
+lYYYYl
+YBYYYY
+YBYLLY
+YYYLLY
+        `,
+        `
+rrrrLr
+rllrLr
+rrrrLr
+rllrLr
+rrrrLr
+LLLLLr
+        `,
+        `
+ llll 
+ l  l 
+llllll
+lLllLl
+lLLLLl
+llllll
+        `,
+        `
+ yyyy 
+yYlYYy
+yYlYYy
+yYllly
+yYYYYy
+ yyyy 
+        `,
+        // Sanity Icon
+        `
+llllll
+llllll
+llllll
+llllll
+llllll
+llllll
+        `,
+        // Education Icon
+        `
+ pPPP 
+pPpPPP
+PPPPpP
+pPPpPp
+PpPPP 
+ Pp   
+        `,
+        // Money Icon
+        `
+      
+ gggg 
+gGGGGg
+gGggGg
+gGGGGg
+ gggg      
+        `
+      ];
+
+      options = {};
+
+      /// Game State
+
+      // player stats
+      let sanity, education, money;
+
+      // current game stage (0 = menu, 1 = select priority, 2 = running level)
+      let stage;
+      let timer, timeRemaining;
+
+      // menu state
+      let currentSelection;
+
+      // selection state
+
+      // running state
+
+      // current priority (0 = personal/social life, 1 = education, 2 = work)
+      let priority;
+
+      /// Stage Implementations
+
+      function menu() {
+        
+      }
+      
+      function selection() {
+        if (input.isJustPressed) {
+          priority = (priority + 1) % 3;
+        }
+
+        // update timer
+        let timeRemaining = Date.now() - timer;
+        if (timeRemaining >= timerLength) {
+          stage = 2;
+        }
+
+        // show selection
+      
+        text("Pick a Priority", 10, 10);
+
+        char("b", 30, 20);
+        text("Personal", 40, 20, {color: priority == 0 ? "red" : "light_black"});
+
+        char("c", 30, 30);
+        text("School", 40, 30, {color: priority == 1 ? "red" : "light_black"});
+
+        char("d", 30, 40);
+        text("Work", 40, 40, {color: priority == 2 ? "red" : "light_black"});
+
+        // show player current stats
+
+        char("f", 30, 60);
+        text("" + sanity, 37, 60);
+
+        char("g", 30, 70);
+        text("" + education, 37, 70);
+        
+        char("h", 30, 80);
+        text("" + money, 37, 80);
+
+        // show time remaining for choice
+
+        char("e", 10, 95);
+        text("" + round((timerLength / 1000) - (timeRemaining / 1000)), 17, 95, {color: timeRemaining >= 7000 ? "red" : "black"});
+      }
+
+      function running() {
+        
+      }
+
+      /// Main Loop
+
+      function update() {
+        if (!ticks) {
+          // initialization
+
+          sanity = 50;
+          education = 10;
+          money = 1000;
+          stage = 1;
+          timer = Date.now();
+          timerLength = 10000;
+          currentSelection = 0;
+          priority = 0;
+        }
+
+        switch (stage) {
+          case 0: // menu
+            menu();
+            break;
+          case 1: // selection
+            selection();
+            break;
+          case 2: // running
+            running();
+            break;
+        }
+      }
+
+      window.addEventListener("load", onLoad);
     </script>
   </head>
   <body style="background: #ddd"></body>
