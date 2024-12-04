@@ -147,7 +147,7 @@ LLLggL
 LllllL
 LLLLLL
 LLLLLL
-        `
+        `,
       ];
 
       options = {};
@@ -165,7 +165,7 @@ LLLLLL
       let timer, timerLength;
 
       // 11 seconds on selection menu
-      const selectionTime = 1; //11;
+      const selectionTime = 11;
 
       // menu state
       let menuPage;
@@ -181,8 +181,10 @@ LLLLLL
       // info state
 
       // running state
-      let scrollSpeed = 1;
+      let scrollSpeed;
       let objects, spawnTime, lastSpawnTime;
+
+      // game over state
 
       // current priority (0 = personal/social life, 1 = education, 2 = work)
       let priority;
@@ -230,16 +232,16 @@ LLLLLL
           switch (priority) {
             case 0: // personal
               money -= personalCostMoney;
-              
+
               break;
             case 1: // school
               money -= schoolCostMoney;
               sanity -= schoolCostSanity;
-              
+
               break;
             case 2: // work
               sanity -= workCostSanity;
-              
+
               break;
           }
 
@@ -288,6 +290,7 @@ LLLLLL
           stage = 3;
           timer = Date.now();
           timerLength = rndi(25, 45) * 1000;
+          scrollSpeed = 1;
 
           // setup objects
           objects = [];
@@ -305,24 +308,24 @@ LLLLLL
           case 0: // personal
             text("Personal", 30, 10);
 
-            text("Collect", 25, 25, {color: "green"});
+            text("Collect", 25, 25, { color: "green" });
             char("g", 75, 25);
 
-            text("Avoid", 40, 40, {color: "light_red"});
+            text("Avoid", 40, 40, { color: "light_red" });
             char("j", 45, 50);
             char("k", 60, 50);
 
             text("Press to Start", 10, 70);
-            
+
             break;
           case 1: // school
             text("School", 35, 10);
 
-            text("Collect", 25, 25, {color: "green"});
+            text("Collect", 25, 25, { color: "green" });
             char("h", 75, 25);
             char("n", 85, 25);
 
-            text("Avoid", 40, 40, {color: "light_red"});
+            text("Avoid", 40, 40, { color: "light_red" });
             char("j", 45, 50);
             char("m", 60, 50);
 
@@ -332,11 +335,11 @@ LLLLLL
           case 2: // work
             text("Work", 45, 10);
 
-            text("Collect", 25, 25, {color: "green"});
+            text("Collect", 25, 25, { color: "green" });
             char("i", 75, 25);
             char("l", 85, 25);
 
-            text("Avoid", 40, 40, {color: "light_red"});
+            text("Avoid", 40, 40, { color: "light_red" });
             char("j", 52, 50);
 
             text("Press to Start", 10, 90);
@@ -350,7 +353,7 @@ LLLLLL
 
       function running() {
         // timer logic
-       
+
         let timeRemaining = timerLength - (Date.now() - timer);
         if (timeRemaining <= 0) {
           // transition to selection stage
@@ -359,21 +362,32 @@ LLLLLL
           timerLength = selectionTime * 1000;
           score += 1;
         }
-      
+
+        // game over logic
+        if (sanity <= 0 || education <= 0 || money <= 0) {
+          // transition to game over
+          stage = 4;
+          return;
+        }
+
         // object logic
         let spawnTimeRemaining = spawnTime - (Date.now() - lastSpawnTime);
         if (spawnTimeRemaining <= 0) {
           // determine type
           let objectType = priority == 1 ? rndi(0, 4) : rndi(0, 3);
-        
+
           // spawn object
-          objects.push({ty: objectType, pos: vec(110, 90), vel: vec(-scrollSpeed, 0)});
+          objects.push({
+            ty: objectType,
+            pos: vec(110, 90),
+            vel: vec(-scrollSpeed, 0),
+          });
 
           // update timer
           lastSpawnTime = Date.now();
-          spawnTime = rnd(0.5, 3.5) * 1000;
+          spawnTime = rnd(0.5, 4.5 - scrollSpeed) * 1000;
         }
-      
+
         if (ticks % 10 == 0) {
           playerSprite = (playerSprite + 1) % playerSpriteCount;
         }
@@ -417,26 +431,31 @@ LLLLLL
             objects.splice(objects.indexOf(object), 1);
             continue;
           }
-          
+
           let objectCol = rect(object.pos.x, object.pos.y, 6, 6).isColliding;
 
           if (objectCol.rect.red) {
             objects.splice(objects.indexOf(object), 1);
-          
+
             // player picks up object
             switch (priority) {
               case 0: // personal
                 switch (object.ty) {
                   case 0: // Sanity
                     sanity += 5;
+                    scrollSpeed += 0.5;
+
                     break;
                   case 1: // Car Breaks Down
                     sanity -= 30;
                     money -= 500;
-                    
+                    scrollSpeed = 1;
+
                     break;
                   case 2: // Spend Money
                     money -= 20;
+                    scrollSpeed = 1;
+
                     break;
                 }
                 break;
@@ -444,22 +463,27 @@ LLLLLL
                 switch (object.ty) {
                   case 0: // Education
                     education += 1;
+                    scrollSpeed = 0.5;
+
                     break;
                   case 1: // Fail Test
                     money -= 100;
                     sanity -= 30;
                     education -= 10;
-                    
+                    scrollSpeed = 1;
+
                     break;
                   case 2: // Pass Test
                     sanity += 5;
                     education += 5;
-                    
+                    scrollSpeed += 1;
+
                     break;
                   case 3: // Car Breaks Down
                     money -= 500;
                     sanity -= 30;
-                    
+                    scrollSpeed = 1;
+
                     break;
                 }
                 break;
@@ -467,16 +491,20 @@ LLLLLL
                 switch (object.ty) {
                   case 0: // Money
                     money += 10 + round(education / 10);
+                    scrollSpeed += 0.5;
+
                     break;
                   case 1: // Job Promotion
                     money += 100;
                     sanity += 10;
-                    
+                    scrollSpeed += 1;
+
                     break;
                   case 2: // Car Breaks Down
                     money -= 500;
                     sanity -= 30;
-                    
+                    scrollSpeed = 1;
+
                     break;
                 }
                 break;
@@ -568,6 +596,34 @@ LLLLLL
         });
       }
 
+      function gameOver() {
+        if (input.isJustPressed) {
+          // transition to menu
+          stage = 0;
+          sanity = 50;
+          education = 10;
+          money = 1000;
+          stage = 0;
+          menuPage = 0;
+          currentSelection = 0;
+          priority = 0;
+          score = 0;
+        }
+
+        text("Game Over", 10, 10);
+
+        text("Final Stats", 10, 30);
+
+        char("g", 30, 60);
+        text("" + sanity, 37, 60);
+
+        char("h", 30, 70);
+        text("" + education, 37, 70);
+
+        char("i", 30, 80);
+        text("" + money, 37, 80);
+      }
+
       /// Main Loop
 
       function update() {
@@ -595,6 +651,9 @@ LLLLLL
             break;
           case 3: // running
             running();
+            break;
+          case 4: // game over
+            gameOver();
             break;
         }
       }
