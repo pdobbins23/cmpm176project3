@@ -180,8 +180,8 @@ gGGGGg
         // show time remaining for choice
 
         char("f", 10, 95);
-        text("" + round(timeRemaining / 1000), 17, 95, {
-          color: timeRemaining <= 3000 ? "red" : "black",
+        text("" + floor(timeRemaining / 1000), 17, 95, {
+          color: timeRemaining <= 4000 ? "red" : "black",
         });
       }
 
@@ -260,7 +260,7 @@ gGGGGg
           money = 1000;
           stage = 1;
           timer = Date.now();
-          timerLength = 10 * 1000;
+          timerLength = 11 * 1000;
           currentSelection = 0;
           priority = 0;
         }
