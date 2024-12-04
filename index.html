@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>crisp-game-lib</title>
+    <title>Juggle It!</title>
     <meta
       name="viewport"
       content="width=device-width, height=device-height,
@@ -21,7 +21,7 @@
             `;
 
       characters = [
-        // Player Sprite
+        // Player Sprites
         `
  pppp
 ppyLby
@@ -38,6 +38,7 @@ rrrrr
 rryyr
  llll
         `,
+        // Personal Icon
         `
   ll
  lYYl
@@ -46,6 +47,7 @@ YBYYYY
 YBYLLY
 YYYLLY
         `,
+        // School Icon
         `
 rrrrLr
 rllrLr
@@ -54,6 +56,7 @@ rllrLr
 rrrrLr
 LLLLLr
         `,
+        // Work Icon
         `
  llll
  l  l
@@ -62,6 +65,7 @@ lLllLl
 lLLLLl
 llllll
         `,
+        // Timer Icon
         `
  yyyy
 yYlYYy
@@ -111,21 +115,52 @@ gGGGGg
 
       // current game stage (0 = menu, 1 = select priority, 2 = running level)
       let stage;
-      let timer, timeRemaining;
+      let timer, timerLength;
+
+      // 11 seconds on selection menu
+      const selectionTime = 11;
 
       // menu state
-      let currentSelection;
+      let menuPage;
 
       // selection state
+      let currentSelection;
 
       // running state
+      let scrollSpeed = 1;
+      let objects, spawnTime, lastSpawnTime;
 
       // current priority (0 = personal/social life, 1 = education, 2 = work)
       let priority;
 
       /// Stage Implementations
 
-      function menu() {}
+      function menu() {
+        if (input.isJustPressed) {
+          menuPage += 1;
+
+          if (menuPage == 2) {
+            // transition to game stage
+            stage = 1;
+
+            timer = Date.now();
+            timerLength = selectionTime * 1000;
+          }
+        }
+
+        switch (menuPage) {
+          case 0:
+            text("Juggle It!", 23, 20);
+            text("Press Start", 21, 50);
+            break;
+          case 1:
+            text("Objective", 25, 20);
+            text("Dont let sanity", 5, 40);
+            text("or money goto 0!", 5, 47);
+            text("Press to Start", 10, 70);
+            break;
+        }
+      }
 
       function selection() {
         if (input.isJustPressed) {
@@ -138,7 +173,12 @@ gGGGGg
           // transition to running stage
           stage = 2;
           timer = Date.now();
-          timeRemaining = rnd(8, 13) * 1000;
+          timerLength = rndi(25, 45) * 1000;
+
+          // setup objects
+          objects = [];
+          spawnTime = rnd(0.5, 3.5) * 1000;
+          lastSpawnTime = 0;
 
           // setup player
           playerY = 90;
@@ -189,6 +229,31 @@ gGGGGg
       // TODO: Objects (positive & negative events)
 
       function running() {
+        // timer logic
+       
+        let timeRemaining = timerLength - (Date.now() - timer);
+        if (timeRemaining <= 0) {
+          // transition to selection stage
+          stage = 1;
+          timer = Date.now();
+          timerLength = selectionTime * 1000;
+          score += 1;
+        }
+      
+        // object logic
+        let spawnTimeRemaining = spawnTime - (Date.now() - lastSpawnTime);
+        if (spawnTimeRemaining <= 0) {
+          // determine type
+          let objectType = rndi(0, 3);
+        
+          // spawn object
+          objects.push({ty: objectType, pos: vec(110, 90), vel: vec(-scrollSpeed, 0)});
+
+          // update timer
+          lastSpawnTime = Date.now();
+          spawnTime = rnd(0.5, 3.5) * 1000;
+        }
+      
         if (ticks % 10 == 0) {
           playerSprite = (playerSprite + 1) % playerSpriteCount;
         }
@@ -211,12 +276,70 @@ gGGGGg
         color("red");
 
         let playerCol = rect(10, playerY, 6, 6).isColliding;
+
+        color("yellow");
+
         let floorCol = rect(0, 95, 200, 5).isColliding;
 
         if (floorCol.rect.red) {
           playerY = 90;
           playerVel = 0;
           playerGrounded = true;
+        }
+
+        color("blue");
+
+        for (object of objects) {
+          object.pos.x += object.vel.x;
+          object.pos.y += object.vel.y;
+
+          if (object.pos.x < -10) {
+            objects.splice(objects.indexOf(object), 1);
+            continue;
+          }
+          
+          let objectCol = rect(object.pos.x, object.pos.y, 6, 6).isColliding;
+
+          if (objectCol.rect.red) {
+            objects.splice(objects.indexOf(object), 1);
+          
+            // player picks up object
+            switch (priority) {
+              case 0: // personal
+                switch (object.ty) {
+                  case 0:
+                    sanity += 5;
+                    break;
+                  case 1:
+                    education += 5;
+                    break;
+                  case 2:
+                    money += 10;
+                    break;
+                }
+                break;
+              case 1: // school
+                switch (object.ty) {
+                  case 0:
+                    break;
+                  case 1:
+                    break;
+                  case 2:
+                    break;
+                }
+                break;
+              case 2: // work
+                switch (object.ty) {
+                  case 0:
+                    break;
+                  case 1:
+                    break;
+                  case 2:
+                    break;
+                }
+                break;
+            }
+          }
         }
 
         // clear screen (hacky, crisp-game-lib is a bit limiting)
@@ -229,6 +352,45 @@ gGGGGg
 
         // show player sprite
         char(playerSprite == 0 ? "a" : "b", 13, playerY + 2);
+
+        // show objects
+        for (object of objects) {
+          switch (priority) {
+            case 0: // personal
+              switch (object.ty) {
+                case 0:
+                  char("g", object.pos.x + 3, object.pos.y + 2);
+                  break;
+                case 1:
+                  char("h", object.pos.x + 3, object.pos.y + 2);
+                  break;
+                case 2:
+                  char("i", object.pos.x + 3, object.pos.y + 2);
+                  break;
+              }
+              break;
+            case 1: // school
+              switch (object.ty) {
+                case 0:
+                  break;
+                case 1:
+                  break;
+                case 2:
+                  break;
+              }
+              break;
+            case 2: // work
+              switch (object.ty) {
+                case 0:
+                  break;
+                case 1:
+                  break;
+                case 2:
+                  break;
+              }
+              break;
+          }
+        }
 
         // show floor
         switch (priority) {
@@ -247,6 +409,12 @@ gGGGGg
 
         // reset color
         color("black");
+
+        // draw timer
+        char("f", 5, 15);
+        text("" + floor(timeRemaining / 1000), 12, 15, {
+          color: timeRemaining <= 4000 ? "red" : "black",
+        });
       }
 
       /// Main Loop
@@ -258,9 +426,8 @@ gGGGGg
           sanity = 50;
           education = 10;
           money = 1000;
-          stage = 1;
-          timer = Date.now();
-          timerLength = 11 * 1000;
+          stage = 0;
+          menuPage = 0;
           currentSelection = 0;
           priority = 0;
         }
