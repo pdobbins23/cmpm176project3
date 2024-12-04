@@ -101,6 +101,53 @@ gGggGg
 gGGGGg
  gggg
         `,
+        /// Events
+
+        // Car Breaks Down
+        `
+lbBBbl
+lbbbbl
+bbbbbb
+bBBBBb
+lBBBBl
+lbbbbl
+        `,
+        // Lose Money Icon
+        `
+
+ rrrr
+rRRRRr
+rRrrRr
+rRRRRr
+ rrrr
+        `,
+        // Job Promotion
+        `
+ YYYY
+ Y  Y
+YYYYYY
+YyYYyY
+YyyyyY
+YYYYYY
+        `,
+        // Fail a Test
+        `
+LLLLLL
+LLLrrL
+LLLrrL
+LllllL
+LLLLLL
+LLLLLL
+        `,
+        // Pass a Test
+        `
+LLLLLL
+LLLggL
+LLLggL
+LllllL
+LLLLLL
+LLLLLL
+        `
       ];
 
       options = {};
@@ -118,13 +165,20 @@ gGGGGg
       let timer, timerLength;
 
       // 11 seconds on selection menu
-      const selectionTime = 11;
+      const selectionTime = 1; //11;
 
       // menu state
       let menuPage;
 
       // selection state
       let currentSelection;
+
+      const personalCostMoney = 25;
+      const schoolCostMoney = 50;
+      const schoolCostSanity = 10;
+      const workCostSanity = 20;
+
+      // info state
 
       // running state
       let scrollSpeed = 1;
@@ -170,21 +224,24 @@ gGGGGg
         // update timer
         let timeRemaining = timerLength - (Date.now() - timer);
         if (timeRemaining <= 0) {
-          // transition to running stage
+          // transition to info stage
           stage = 2;
-          timer = Date.now();
-          timerLength = rndi(25, 45) * 1000;
 
-          // setup objects
-          objects = [];
-          spawnTime = rnd(0.5, 3.5) * 1000;
-          lastSpawnTime = 0;
-
-          // setup player
-          playerY = 90;
-          playerVel = 0;
-          playerGrounded = true;
-          playerSprite = 0;
+          switch (priority) {
+            case 0: // personal
+              money -= personalCostMoney;
+              
+              break;
+            case 1: // school
+              money -= schoolCostMoney;
+              sanity -= schoolCostSanity;
+              
+              break;
+            case 2: // work
+              sanity -= workCostSanity;
+              
+              break;
+          }
 
           return;
         }
@@ -225,6 +282,69 @@ gGGGGg
         });
       }
 
+      function info() {
+        if (input.isJustPressed) {
+          // transition to running stage
+          stage = 3;
+          timer = Date.now();
+          timerLength = rndi(25, 45) * 1000;
+
+          // setup objects
+          objects = [];
+          spawnTime = rnd(0.5, 3.5) * 1000;
+          lastSpawnTime = 0;
+
+          // setup player
+          playerY = 90;
+          playerVel = 0;
+          playerGrounded = true;
+          playerSprite = 0;
+        }
+
+        switch (priority) {
+          case 0: // personal
+            text("Personal", 30, 10);
+
+            text("Collect", 25, 25, {color: "green"});
+            char("g", 75, 25);
+
+            text("Avoid", 40, 40, {color: "light_red"});
+            char("j", 45, 50);
+            char("k", 60, 50);
+
+            text("Press to Start", 10, 70);
+            
+            break;
+          case 1: // school
+            text("School", 35, 10);
+
+            text("Collect", 25, 25, {color: "green"});
+            char("h", 75, 25);
+            char("n", 85, 25);
+
+            text("Avoid", 40, 40, {color: "light_red"});
+            char("j", 45, 50);
+            char("m", 60, 50);
+
+            text("Press to Start", 10, 70);
+
+            break;
+          case 2: // work
+            text("Work", 45, 10);
+
+            text("Collect", 25, 25, {color: "green"});
+            char("i", 75, 25);
+            char("l", 85, 25);
+
+            text("Avoid", 40, 40, {color: "light_red"});
+            char("j", 52, 50);
+
+            text("Press to Start", 10, 90);
+
+            break;
+        }
+      }
+
       // TODO: Correlation between sanity, education, and money stats with spawn rates and movement speed
       // TODO: Objects (positive & negative events)
 
@@ -244,7 +364,7 @@ gGGGGg
         let spawnTimeRemaining = spawnTime - (Date.now() - lastSpawnTime);
         if (spawnTimeRemaining <= 0) {
           // determine type
-          let objectType = rndi(0, 3);
+          let objectType = priority == 1 ? rndi(0, 4) : rndi(0, 3);
         
           // spawn object
           objects.push({ty: objectType, pos: vec(110, 90), vel: vec(-scrollSpeed, 0)});
@@ -307,34 +427,56 @@ gGGGGg
             switch (priority) {
               case 0: // personal
                 switch (object.ty) {
-                  case 0:
+                  case 0: // Sanity
                     sanity += 5;
                     break;
-                  case 1:
-                    education += 5;
+                  case 1: // Car Breaks Down
+                    sanity -= 30;
+                    money -= 500;
+                    
                     break;
-                  case 2:
-                    money += 10;
+                  case 2: // Spend Money
+                    money -= 20;
                     break;
                 }
                 break;
               case 1: // school
                 switch (object.ty) {
-                  case 0:
+                  case 0: // Education
+                    education += 1;
                     break;
-                  case 1:
+                  case 1: // Fail Test
+                    money -= 100;
+                    sanity -= 30;
+                    education -= 10;
+                    
                     break;
-                  case 2:
+                  case 2: // Pass Test
+                    sanity += 5;
+                    education += 5;
+                    
+                    break;
+                  case 3: // Car Breaks Down
+                    money -= 500;
+                    sanity -= 30;
+                    
                     break;
                 }
                 break;
               case 2: // work
                 switch (object.ty) {
-                  case 0:
+                  case 0: // Money
+                    money += 10 + round(education / 10);
                     break;
-                  case 1:
+                  case 1: // Job Promotion
+                    money += 100;
+                    sanity += 10;
+                    
                     break;
-                  case 2:
+                  case 2: // Car Breaks Down
+                    money -= 500;
+                    sanity -= 30;
+                    
                     break;
                 }
                 break;
@@ -358,34 +500,43 @@ gGGGGg
           switch (priority) {
             case 0: // personal
               switch (object.ty) {
-                case 0:
+                case 0: // Sanity
                   char("g", object.pos.x + 3, object.pos.y + 2);
                   break;
-                case 1:
-                  char("h", object.pos.x + 3, object.pos.y + 2);
+                case 1: // Car Breaks Down
+                  char("j", object.pos.x + 3, object.pos.y + 2);
                   break;
-                case 2:
-                  char("i", object.pos.x + 3, object.pos.y + 2);
+                case 2: // Spend Money
+                  char("k", object.pos.x + 3, object.pos.y + 2);
                   break;
               }
               break;
             case 1: // school
               switch (object.ty) {
-                case 0:
+                case 0: // Education
+                  char("h", object.pos.x + 3, object.pos.y + 2);
                   break;
-                case 1:
+                case 1: // Fail Test
+                  char("m", object.pos.x + 3, object.pos.y + 2);
                   break;
-                case 2:
+                case 2: // Pass Test
+                  char("n", object.pos.x + 3, object.pos.y + 2);
+                  break;
+                case 3: // Car Breaks Down
+                  char("j", object.pos.x + 3, object.pos.y + 2);
                   break;
               }
               break;
             case 2: // work
               switch (object.ty) {
-                case 0:
+                case 0: // Money
+                  char("i", object.pos.x + 3, object.pos.y + 2);
                   break;
-                case 1:
+                case 1: // Job Promotion
+                  char("l", object.pos.x + 3, object.pos.y + 2);
                   break;
-                case 2:
+                case 2: // Car Breaks Down
+                  char("j", object.pos.x + 3, object.pos.y + 2);
                   break;
               }
               break;
@@ -439,7 +590,10 @@ gGGGGg
           case 1: // selection
             selection();
             break;
-          case 2: // running
+          case 2: // level info
+            info();
+            break;
+          case 3: // running
             running();
             break;
         }
