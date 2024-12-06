@@ -105,50 +105,221 @@ gGGGGg
 
         // Car Breaks Down
         `
-lbBBbl
-lbbbbl
+r r   
+ r    
+r rBBb
 bbbbbb
+bllbbb
+ ll   
+        `,
+        // Injury
+        `
+ LLLL 
+LLrrLL
+LrrrrL
+LrrrrL
+LLrrLL
+ LLLL 
+        `,
+        // Illness
+        `
+ LLL  
+ LlL  
+ LrL  
+ LrL  
+LrrrL 
+ LLL  
+        `,
+        // Personal Conflict
+        `
+ rrrr 
+lrrrrl
+rlrrlr
+LbrrbL
+rrrrrr
+ rrrr 
+        `,
+        // Food
+        `
+  gg  
+ rggr 
+rrrRrr
+rrrRRr
+rrrrrr
+ rrrr 
+        `,
+        // Social
+        `
+ bbbb 
 bBBBBb
-lBBBBl
-lbbbbl
+bBBBBb
+ bBBb 
+  bb  
+ bb   
         `,
-        // Lose Money Icon
+        // Date
         `
-
- rrrr
-rRRRRr
-rRrrRr
-rRRRRr
- rrrr
+ R  R 
+RRRRRR
+RRRRRR
+RRRRRR
+ RRRR 
+  RR  
         `,
-        // Job Promotion
-        `
- YYYY
- Y  Y
-YYYYYY
-YyYYyY
-YyyyyY
-YYYYYY
-        `,
-        // Fail a Test
+        // Travel
         `
 LLLLLL
-LLLrrL
-LLLrrL
+L    L
+LLLLLL
+LLLLLL
+llLLll
+llLLll
+        `,
+        // Hobby
+        `
+    ll
+   ll 
+ yll  
+LyyLLL
+LLLLLL
+LLLLLL
+        `,
+        // Sleep
+        `
+LllllL
 LllllL
 LLLLLL
-LLLLLL
+BBBBBB
+BBBBBB
+BBBBBB
         `,
         // Pass a Test
         `
 LLLLLL
 LLLggL
 LLLggL
-LllllL
+LLLLLL
 LLLLLL
 LLLLLL
         `,
+        // Fail a Test
+        `
+LLLLLL
+LLLrrL
+LLLrrL
+LLLLLL
+LLLLLL
+LLLLLL
+        `,
+        // Assignment
+        `
+LLLLLL
+LllllL
+LLLLLL
+LllLLL
+LLLllL
+LLLLLL
+        `,
+        // Project
+        `
+LLyyLL
+LyYYyL
+LyYYyL
+LLyyLL
+LLllLL
+LLllLL
+        `,
+        // Housing
+        `
+  rr
+ rYYr
+rYYYYr
+YBYYYY
+YBYLLY
+YYYLLY
+        `,
+        // Paycheck
+        `
+      
+LLLLLL
+LllLLL
+LLLggL
+LLLLLL
+      
+        `,
+        // Bonus
+        `
+      
+LLLLLL
+LllYYL
+LYYggL
+LLLLLL
+      
+        `,
+        // Work Trip
+        `
+ yyyy
+ y  y
+yyyyyy
+yYyyYy
+yYYYYy
+yyyyyy
+        `,
+        // Overtime
+        `
+ rrrr
+rRlRRr
+rRlRRr
+rRlllr
+rRRRRr
+ rrrr
+        `,
+        // Fired
+        `
+      
+rrrrrr
+rllRRr
+rRRyyr
+rrrrrr
+      
+        `
       ];
+
+      // pickUp table
+      let pickUps = {
+        // General
+        carBreak: { icon: "j", sanity: -30, education: 0, money: -500, good: false, speedUpFactor: 1 },
+        injury: { icon: "k", sanity: -10, education: 0, money: -50, good: false, speedUpFactor: 1},
+        illness: { icon: "l", sanity: -5, education: 0, money: -5, good: false, speedUpFactor: 1 },
+        personalConflict: { icon: "m", sanity: -2, education: 0, money: 0, good: false, speedUpFactor: 1 },
+        food: { icon: "n", sanity: 1, education: 0, money: -15, good: true, speedUpFactor: 1 },
+        
+        // Personal
+        social: { icon: "o", sanity: 2, education: 0, money: -20, good: true, speedUpFactor: 1 },
+        date: { icon: "p", sanity: 5, education: 0, money: -50, good: true, speedUpFactor: 1 },
+        travel: { icon: "q", sanity: 50, education: 0, money: -350, good: true, speedUpFactor: 1.5 },
+        hobby: { icon: "r", sanity: 3, education: 1, money: -10, good: true, speedUpFactor: 1 },
+        sleep: { icon: "s", sanity: 1, education: 0, money: 0, good: true, speedUpFactor: 1 },
+
+        // School
+        passTest: { icon: "t", sanity: -10, education: 10, money: 0, good: true, speedUpFactor: 1 },
+        failTest: { icon: "u", sanity: -20, education: -5, money: -50, good: false, speedUpFactor: 1 },
+        assignment: { icon: "v", sanity: -1, education: 1, money: 0, good: true, speedUpFactor: 1 },
+        project: { icon: "w", sanity: -5, education: 5, money: 0, good: true, speedUpFactor: 1 },
+        housing: { icon: "x", sanity: -15, education: 0, money: -500, good: false, speedUpFactor: 1 },
+
+        // Work
+        paycheck: { icon: "y", sanity: -2, education: 0, money: 10, good: true, speedUpFactor: 1, educationFactor: true },
+        bonus: { icon: "z", sanity: 0, education: 0, money: 5, good: true, speedUpFactor: 1.25 },
+        workTrip: { icon: "{", sanity: -5, education: 1, money: 5, good: true, speedUpFactor: 1 },
+        overtime: { icon: "|", sanity: -10, education: 0, money: 15, good: true, speedUpFactor: 1.5 },
+        fired: { icon: "}", sanity: -50, education: 0, money: -100, good: false, speedUpFactor: 1 },
+      };
+
+      let generalPickUps = ["carBreak", "injury", "illness", "personalConflict", "food"];
+      let personalPickUps = generalPickUps.concat(["social", "date", "travel", "hobby", "sleep"]);
+      let schoolPickUps = generalPickUps.concat(["passTest", "failTest", "assignment", "project", "housing"]);
+      let workPickUps = generalPickUps.concat(["paycheck", "bonus", "workTrip", "overtime", "fired"]);
 
       options = {};
 
@@ -159,6 +330,10 @@ LLLLLL
       let playerSprite,
         playerSpriteCount = 2;
       let sanity, education, money;
+
+      const startingSanity = 100;
+      const startingEducation = 10;
+      const startingMoney = 1000;
 
       // current game stage (0 = menu, 1 = select priority, 2 = running level)
       let stage;
@@ -172,6 +347,7 @@ LLLLLL
 
       // selection state
       let currentSelection;
+      let lastTickSound;
 
       const personalCostMoney = 25;
       const schoolCostMoney = 50;
@@ -183,6 +359,10 @@ LLLLLL
       // running state
       let scrollSpeed;
       let objects, spawnTime, lastSpawnTime;
+      let lastPlayerFrame;
+      let pickUpIndicators;
+
+      const speedUpFactor = 0.2;
 
       // game over state
 
@@ -196,12 +376,19 @@ LLLLLL
           menuPage += 1;
 
           if (menuPage == 2) {
-            // transition to game stage
+            // transition to selection stage
             stage = 1;
 
             timer = Date.now();
             timerLength = selectionTime * 1000;
+            lastTickSound = Date.now();
+
+            play("synth");
+
+            return;
           }
+
+          play("select");
         }
 
         switch (menuPage) {
@@ -221,6 +408,8 @@ LLLLLL
       function selection() {
         if (input.isJustPressed) {
           priority = (priority + 1) % 3;
+
+          play("select");
         }
 
         // update timer
@@ -245,7 +434,16 @@ LLLLLL
               break;
           }
 
+          play("synth");
+
           return;
+        }
+
+        // play countdown audio <= 3 seconds
+        if (timeRemaining <= 4000 && Date.now() - lastTickSound >= 1000) {
+          lastTickSound = Date.now();
+
+          play("click");
         }
 
         // show selection
@@ -278,8 +476,8 @@ LLLLLL
 
         // show time remaining for choice
 
-        char("f", 10, 95);
-        text("" + floor(timeRemaining / 1000), 17, 95, {
+        char("f", 5, 95);
+        text("" + floor(timeRemaining / 1000), 12, 95, {
           color: timeRemaining <= 4000 ? "red" : "black",
         });
       }
@@ -291,29 +489,32 @@ LLLLLL
           timer = Date.now();
           timerLength = rndi(25, 45) * 1000;
           scrollSpeed = 1;
+          lastPlayerFrame = 0;
 
           // setup objects
           objects = [];
           spawnTime = rnd(0.5, 3.5) * 1000;
           lastSpawnTime = 0;
+          pickUpIndicators = [];
 
           // setup player
           playerY = 90;
           playerVel = 0;
           playerGrounded = true;
           playerSprite = 0;
+
+          play("synth");
         }
 
         switch (priority) {
           case 0: // personal
             text("Personal", 30, 10);
 
-            text("Collect", 25, 25, { color: "green" });
-            char("g", 75, 25);
+            text("+", 45, 35, { color: "green" });
+            char("g", 55, 35);
 
-            text("Avoid", 40, 40, { color: "light_red" });
-            char("j", 45, 50);
-            char("k", 60, 50);
+            text("-", 45, 45, { color: "red" });
+            char("i", 55, 45);
 
             text("Press to Start", 10, 70);
 
@@ -321,26 +522,23 @@ LLLLLL
           case 1: // school
             text("School", 35, 10);
 
-            text("Collect", 25, 25, { color: "green" });
-            char("h", 75, 25);
-            char("n", 85, 25);
+            text("+", 45, 35, { color: "green" });
+            char("h", 55, 35);
 
-            text("Avoid", 40, 40, { color: "light_red" });
-            char("j", 45, 50);
-            char("m", 60, 50);
+            text("-", 45, 45, { color: "red" });
+            char("i", 55, 45);
 
             text("Press to Start", 10, 70);
 
             break;
           case 2: // work
-            text("Work", 45, 10);
+            text("Work", 40, 10);
 
-            text("Collect", 25, 25, { color: "green" });
-            char("i", 75, 25);
-            char("l", 85, 25);
+            text("+", 45, 35, { color: "green" });
+            char("i", 55, 35);
 
-            text("Avoid", 40, 40, { color: "light_red" });
-            char("j", 52, 50);
+            text("-", 45, 45, { color: "red" });
+            char("g", 55, 45);
 
             text("Press to Start", 10, 90);
 
@@ -349,38 +547,69 @@ LLLLLL
       }
 
       // TODO: Correlation between sanity, education, and money stats with spawn rates and movement speed
-      // TODO: Objects (positive & negative events)
 
       function running() {
         // timer logic
 
         let timeRemaining = timerLength - (Date.now() - timer);
         if (timeRemaining <= 0) {
+          // game over logic
+          if (sanity <= 0 || education <= 0 || money <= 0) {
+            // transition to game over
+            stage = 4;
+
+            play("lucky");
+          
+            return;
+          }
+
           // transition to selection stage
           stage = 1;
           timer = Date.now();
           timerLength = selectionTime * 1000;
           score += 1;
+
+          play("tone");
+
+          return;
         }
 
-        // game over logic
-        if (sanity <= 0 || education <= 0 || money <= 0) {
-          // transition to game over
-          stage = 4;
-          return;
+        // pick up indicator logic
+        for (let i = 0; i < (pickUpIndicators.length > 3 ? 3 : pickUpIndicators.length); i++) {
+          if (pickUpIndicators[i].startTime == undefined) {
+            pickUpIndicators[i].startTime = Date.now();
+            pickUpIndicators[i].y = 0;
+          }
+
+          if (Date.now() - pickUpIndicators[i].startTime >= 1250) {
+            pickUpIndicators.splice(i, 1);
+          } else {
+            pickUpIndicators[i].y -= 0.5;
+          }
         }
 
         // object logic
         let spawnTimeRemaining = spawnTime - (Date.now() - lastSpawnTime);
         if (spawnTimeRemaining <= 0) {
           // determine type
-          let objectType = priority == 1 ? rndi(0, 4) : rndi(0, 3);
+          let objectType;
+
+          switch (priority) {
+            case 0: // personal
+              objectType = personalPickUps[rndi(0, personalPickUps.length)];
+              break;
+            case 1: // school
+              objectType = schoolPickUps[rndi(0, schoolPickUps.length)];
+              break;
+            case 2: // work
+              objectType = workPickUps[rndi(0, workPickUps.length)];
+              break;
+          }
 
           // spawn object
           objects.push({
             ty: objectType,
             pos: vec(110, 90),
-            vel: vec(-scrollSpeed, 0),
           });
 
           // update timer
@@ -388,7 +617,8 @@ LLLLLL
           spawnTime = rnd(0.5, 4.5 - scrollSpeed) * 1000;
         }
 
-        if (ticks % 10 == 0) {
+        if (Date.now() - lastPlayerFrame >= 250 - (scrollSpeed * 50)) {
+          lastPlayerFrame = Date.now();
           playerSprite = (playerSprite + 1) % playerSpriteCount;
         }
 
@@ -396,6 +626,8 @@ LLLLLL
         if (playerGrounded && input.isJustPressed) {
           playerGrounded = false;
           playerVel = 1.2;
+
+          play("click");
         }
 
         if (playerVel != 0) {
@@ -424,8 +656,7 @@ LLLLLL
         color("blue");
 
         for (object of objects) {
-          object.pos.x += object.vel.x;
-          object.pos.y += object.vel.y;
+          object.pos.x -= scrollSpeed;
 
           if (object.pos.x < -10) {
             objects.splice(objects.indexOf(object), 1);
@@ -437,77 +668,33 @@ LLLLLL
           if (objectCol.rect.red) {
             objects.splice(objects.indexOf(object), 1);
 
-            // player picks up object
-            switch (priority) {
-              case 0: // personal
-                switch (object.ty) {
-                  case 0: // Sanity
-                    sanity += 5;
-                    scrollSpeed += 0.5;
+            let objTy = pickUps[object.ty];
 
-                    break;
-                  case 1: // Car Breaks Down
-                    sanity -= 30;
-                    money -= 500;
-                    scrollSpeed = 1;
+            if (objTy.sanity != 0) {
+              sanity += objTy.sanity;
+              pickUpIndicators.push({ ty: 0, amount: objTy.sanity });
+            }
 
-                    break;
-                  case 2: // Spend Money
-                    money -= 20;
-                    scrollSpeed = 1;
+            if (objTy.education != 0) {
+              education += objTy.education;
+              pickUpIndicators.push({ ty: 1, amount: objTy.education });
+            }
 
-                    break;
-                }
-                break;
-              case 1: // school
-                switch (object.ty) {
-                  case 0: // Education
-                    education += 1;
-                    scrollSpeed = 0.5;
+            if (objTy.money != 0) {
+              let amount = objTy.money + (objTy.educationFactor != undefined ? round(education / 10) : 0);
+              money += amount;
+              
+              pickUpIndicators.push({ ty: 2, amount: amount });
+            }
 
-                    break;
-                  case 1: // Fail Test
-                    money -= 100;
-                    sanity -= 30;
-                    education -= 10;
-                    scrollSpeed = 1;
+            if (objTy.good) {
+              scrollSpeed += speedUpFactor * objTy.speedUpFactor;
 
-                    break;
-                  case 2: // Pass Test
-                    sanity += 5;
-                    education += 5;
-                    scrollSpeed += 1;
-
-                    break;
-                  case 3: // Car Breaks Down
-                    money -= 500;
-                    sanity -= 30;
-                    scrollSpeed = 1;
-
-                    break;
-                }
-                break;
-              case 2: // work
-                switch (object.ty) {
-                  case 0: // Money
-                    money += 10 + round(education / 10);
-                    scrollSpeed += 0.5;
-
-                    break;
-                  case 1: // Job Promotion
-                    money += 100;
-                    sanity += 10;
-                    scrollSpeed += 1;
-
-                    break;
-                  case 2: // Car Breaks Down
-                    money -= 500;
-                    sanity -= 30;
-                    scrollSpeed = 1;
-
-                    break;
-                }
-                break;
+              play("coin");
+            } else {
+              scrollSpeed = 1;
+              
+              play("hit");
             }
           }
         }
@@ -525,50 +712,7 @@ LLLLLL
 
         // show objects
         for (object of objects) {
-          switch (priority) {
-            case 0: // personal
-              switch (object.ty) {
-                case 0: // Sanity
-                  char("g", object.pos.x + 3, object.pos.y + 2);
-                  break;
-                case 1: // Car Breaks Down
-                  char("j", object.pos.x + 3, object.pos.y + 2);
-                  break;
-                case 2: // Spend Money
-                  char("k", object.pos.x + 3, object.pos.y + 2);
-                  break;
-              }
-              break;
-            case 1: // school
-              switch (object.ty) {
-                case 0: // Education
-                  char("h", object.pos.x + 3, object.pos.y + 2);
-                  break;
-                case 1: // Fail Test
-                  char("m", object.pos.x + 3, object.pos.y + 2);
-                  break;
-                case 2: // Pass Test
-                  char("n", object.pos.x + 3, object.pos.y + 2);
-                  break;
-                case 3: // Car Breaks Down
-                  char("j", object.pos.x + 3, object.pos.y + 2);
-                  break;
-              }
-              break;
-            case 2: // work
-              switch (object.ty) {
-                case 0: // Money
-                  char("i", object.pos.x + 3, object.pos.y + 2);
-                  break;
-                case 1: // Job Promotion
-                  char("l", object.pos.x + 3, object.pos.y + 2);
-                  break;
-                case 2: // Car Breaks Down
-                  char("j", object.pos.x + 3, object.pos.y + 2);
-                  break;
-              }
-              break;
-          }
+          char(pickUps[object.ty].icon, object.pos.x + 3, object.pos.y + 2);
         }
 
         // show floor
@@ -594,15 +738,32 @@ LLLLLL
         text("" + floor(timeRemaining / 1000), 12, 15, {
           color: timeRemaining <= 4000 ? "red" : "black",
         });
+
+        // draw current indicator
+        for (let i = 0; i < (pickUpIndicators.length > 3 ? 3 : pickUpIndicators.length); i++) {
+          switch (pickUpIndicators[i].ty) {
+            case 0: // sanity
+              char("g", 20, 80 - (10 * i) + pickUpIndicators[i].y);
+              break;
+            case 1: // education
+              char("h", 20, 80 - (10 * i) + pickUpIndicators[i].y);
+              break;
+            case 2: // money
+              char("i", 20, 80 - (10 * i) + pickUpIndicators[i].y);
+              break;
+          }
+
+          text("" + pickUpIndicators[i].amount, 27, 80 - (10 * i) + pickUpIndicators[i].y, {color: pickUpIndicators[i].amount < 0 ? "red" : "green"});
+        }
       }
 
       function gameOver() {
         if (input.isJustPressed) {
           // transition to menu
           stage = 0;
-          sanity = 50;
-          education = 10;
-          money = 1000;
+          sanity = startingSanity;
+          education = startingEducation;
+          money = startingMoney;
           stage = 0;
           menuPage = 0;
           currentSelection = 0;
@@ -610,18 +771,20 @@ LLLLLL
           score = 0;
         }
 
-        text("Game Over", 10, 10);
+        text("Game Over", 25, 10);
 
-        text("Final Stats", 10, 30);
+        text("Final Stats", 20, 30);
 
-        char("g", 30, 60);
-        text("" + sanity, 37, 60);
+        char("g", 40, 50);
+        text("" + sanity, 47, 50, {color: sanity <= 0 ? "red" : "black"});
 
-        char("h", 30, 70);
-        text("" + education, 37, 70);
+        char("h", 40, 60);
+        text("" + education, 47, 60, {color: education <= 0 ? "red" : "black"});
 
-        char("i", 30, 80);
-        text("" + money, 37, 80);
+        char("i", 40, 70);
+        text("" + money, 47, 70, {color: money <= 0 ? "red" : "black"});
+
+        text("Press to Reset", 10, 90);
       }
 
       /// Main Loop
@@ -630,9 +793,9 @@ LLLLLL
         if (!ticks) {
           // initialization
 
-          sanity = 50;
-          education = 10;
-          money = 1000;
+          sanity = startingSanity;
+          education = startingEducation;
+          money = startingMoney;
           stage = 0;
           menuPage = 0;
           currentSelection = 0;
