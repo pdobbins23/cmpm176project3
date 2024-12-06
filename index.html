@@ -418,22 +418,6 @@ rrrrrr
           // transition to info stage
           stage = 2;
 
-          switch (priority) {
-            case 0: // personal
-              money -= personalCostMoney;
-
-              break;
-            case 1: // school
-              money -= schoolCostMoney;
-              sanity -= schoolCostSanity;
-
-              break;
-            case 2: // work
-              sanity -= workCostSanity;
-
-              break;
-          }
-
           play("synth");
 
           return;
